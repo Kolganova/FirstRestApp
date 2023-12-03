@@ -5,6 +5,7 @@ import com.kolgnova.springcourse.FirstRestApp.repositories.PeopleRepository;
 import com.kolgnova.springcourse.FirstRestApp.util.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,11 @@ public class PeopleService {
 
     public Person findOne(int id) {
         return peopleRepository.findById(id).orElseThrow(PersonNotFoundException::new);
+    }
+
+    @Transactional
+    public void save(Person person) {
+        peopleRepository.save(person);
     }
 
 }
