@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,7 +26,14 @@ public class PeopleService {
 
     @Transactional
     public void save(Person person) {
+        enrichPerson(person);
         peopleRepository.save(person);
+    }
+
+    private void enrichPerson(Person person) {
+        person.setCreated_at(LocalDateTime.now());
+        person.setUpdated_at(LocalDateTime.now());
+        person.setCreated_who("ADMIN");
     }
 
 }
