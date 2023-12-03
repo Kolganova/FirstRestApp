@@ -2,11 +2,12 @@ package com.kolgnova.springcourse.FirstRestApp.controllers;
 
 import com.kolgnova.springcourse.FirstRestApp.models.Person;
 import com.kolgnova.springcourse.FirstRestApp.services.PeopleService;
+import com.kolgnova.springcourse.FirstRestApp.util.PersonErrorResponse;
+import com.kolgnova.springcourse.FirstRestApp.util.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +22,19 @@ public class PeopleController {
     public List<Person> getPeople() {
         return peopleService.findAll();
     }
+
     @GetMapping("/{id}")
     public Person getPerson(@PathVariable("id") int id) {
         return peopleService.findOne(id);
     }
 
+    @ExceptionHandler
+    private ResponseEntity<PersonErrorResponse> handleException(PersonNotFoundException e) {
+        PersonErrorResponse response = new PersonErrorResponse(
+                "Person with this id was not found!",
+                System.currentTimeMillis()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
 }
